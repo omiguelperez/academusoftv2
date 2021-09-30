@@ -27,7 +27,7 @@ Run the tests with the command bellow:
 
 `docker-compose -f local.yml run --rm django python manage.py test --setings=config.settings.test --parallel`
 
-### CI
+## CI
 
 We'll use Github actions.
 
