@@ -34,3 +34,5 @@ We'll use Github actions.
 ## Deployment
 
 This project will be deployed using IaC.
+
+We will deploy our infrastructure on top of AWS, deploying service using Fargate to handle auto scaling for better performance and cost reducing.
