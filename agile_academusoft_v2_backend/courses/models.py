@@ -8,6 +8,7 @@ class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
+    code = models.CharField(max_length=10, unique=True)
     credits = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
