@@ -76,7 +76,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "agile_academusoft_v2_backend.users.apps.UsersConfig",
-    # Your stuff: custom apps go here
+    "agile_academusoft_v2_backend.courses.apps.CoursesConfig"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -296,10 +296,12 @@ SOCIALACCOUNT_ADAPTER = "agile_academusoft_v2_backend.users.adapters.SocialAccou
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        # "rest_framework.permissions.IsAuthenticated",
+    ),
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
