@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from agile_academusoft_v2_backend.users.forms import UserChangeForm, UserCreationForm
+from agile_academusoft_v2_backend.users.models import Student, Teacher
 
 User = get_user_model()
 
@@ -32,3 +33,13 @@ class UserAdmin(auth_admin.UserAdmin):
     )
     list_display = ["username", "name", "is_superuser"]
     search_fields = ["name"]
+
+
+@admin.register(Student)
+class StudentAdmin(UserAdmin):
+    pass
+
+
+@admin.register(Teacher)
+class TeacherAdmin(UserAdmin):
+    pass
