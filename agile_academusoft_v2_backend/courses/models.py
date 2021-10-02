@@ -62,8 +62,4 @@ class Score(AgileAcademusoftV2BackendModel):
     third = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
     final = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
 
-    def calculate_final_score(self):
-        return (self.first + self.second + self.third) / self.NUMBER_OF_SCORES
-
-
 
