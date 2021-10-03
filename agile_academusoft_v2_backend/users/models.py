@@ -38,7 +38,7 @@ class Student(ThirdPartyUser):
         verbose_name_plural = _("Students")
 
     def __str__(self):
-        return _('Student %(name)s') % {'name': self.name}
+        return _('Estudiante %(name)s') % {'name': self.name}
 
 
 class Teacher(ThirdPartyUser):
@@ -47,4 +47,4 @@ class Teacher(ThirdPartyUser):
         verbose_name_plural = _("Teachers")
 
     def __str__(self):
-        return _('Teacher %(name)s') % {'name': self.name}
+        return _('Profesor %(name)s') % {'name': self.name}
