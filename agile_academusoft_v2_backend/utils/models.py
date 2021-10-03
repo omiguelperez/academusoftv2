@@ -7,7 +7,12 @@ from django.utils.translation import gettext_lazy as _
 class AgileAcademusoftV2BackendModel(models.Model):
     """Basic model with custom fields."""
 
-    id = models.UUIDField(_('Unique Record Identifier'), default=uuid4, primary_key=True)
+    id = models.UUIDField(
+        help_text=_('Unique Record Identifier'),
+        default=uuid4,
+        primary_key=True,
+        editable=False
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

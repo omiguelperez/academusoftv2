@@ -4,7 +4,7 @@ from agile_academusoft_v2_backend.courses.models import Course
 
 
 def list_enrolled_courses(logged_user):
-    return Course.objects.filter(course_groups__students=logged_user.student)
+    return Course.objects.filter(course_groups__students__student=logged_user.student)
 
 
 def list_by_enrolling_courses(logged_user):
