@@ -40,8 +40,7 @@ jobs:
 
   build:
 
-    needs:
-      - pytest
+    needs: pytest
     name: 'Build and push to ECR'
     runs-on: ubuntu-latest
     steps:
@@ -85,8 +84,7 @@ jobs:
 
   deploy:
 
-    needs:
-      - build
+    needs: build
     name: 'Deploy to AWS'
     runs-on: ubuntu-latest
     steps:
