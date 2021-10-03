@@ -1,8 +1,13 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import CourseSerializer, CourseGroupScheduleSerializer
+from .serializers import (
+    CourseSerializer,
+    CourseGroupScheduleSerializer,
+    EnrollmentSerializer,
+    UnenrollmentSerializer, EnrolledCourseGroupSerializer,
+)
 from ..models import Course, Schedule
 from ..queries import list_courses_for_enrolling
 
@@ -17,6 +22,22 @@ class CourseViewSet(viewsets.ModelViewSet):
             return list_courses_for_enrolling(self.request.user, action=self.action)
         return queryset
 
+    def get_serializer_class(self):
+        serializer_class_map = {
+            'enrolled': EnrolledCourseGroupSerializer,
+            'enroll': EnrollmentSerializer,
+            'unenroll': UnenrollmentSerializer,
+        }
+        if self.action in serializer_class_map.keys():
+            return serializer_class_map[self.action]
+        return CourseSerializer
+
+    def _process_enrollment(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
     # /api/courses/enrolled/
     @action(detail=False, methods=['GET'])
     def enrolled(self, request, *args, **kwargs):
@@ -30,12 +51,12 @@ class CourseViewSet(viewsets.ModelViewSet):
     # /api/courses/enroll/
     @action(detail=False, methods=['POST'])
     def enroll(self, request, *args, **kwargs):
-        pass
+        return self._process_enrollment(request)
 
     # /api/courses/unenroll/
     @action(detail=False, methods=['POST'])
     def unenroll(self, request, *args, **kwargs):
-        pass
+        return self._process_enrollment(request)
 
     # /api/courses/groups/
     @action(detail=True, methods=['GET'])

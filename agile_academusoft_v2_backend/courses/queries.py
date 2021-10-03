@@ -8,7 +8,13 @@ def list_enrolled_courses(logged_user):
 
 
 def list_by_enrolling_courses(logged_user):
-    return Course.objects.filter()
+    enrolled_courses = Course.objects.filter(
+        course_groups__students__student=logged_user.student
+    )
+    courses_by_enrolling = Course.objects.exclude(
+        pk__in=enrolled_courses.values('pk')
+    )
+    return courses_by_enrolling
 
 
 def list_courses_for_enrolling(logged_user, action):
