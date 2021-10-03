@@ -49,10 +49,10 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: academusoftv2.yml
-          directory: ./ansible/production/
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          inventory: ${{ secrets.ANSIBLE_INVENTORY }}
-          vault_password: ${{ secrets.VAULT_PASSWORD }}
+          directory: ./ansible/
+          key: files/instance/id_rsa
+          inventory: inventory.ini
+          vault_password: vault.pass
           options: |
             --verbose
             --tags deploy
