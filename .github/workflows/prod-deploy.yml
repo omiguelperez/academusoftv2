@@ -44,9 +44,9 @@ jobs:
         with:
           playbook: academusoftv2.yml
           directory: ./ansible/
-          key: files/instance/id_rsa
-          inventory: inventory.ini
-          vault_password: vault.pass
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: ${{secrets.ANSIBLE_INVENTORY}}
+          vault_password: ${{secrets.VAULT_PASSWORD}}
           options: |
             --verbose
             --tags deploy
