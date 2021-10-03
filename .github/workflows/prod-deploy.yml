@@ -1,0 +1,66 @@
+name: Production deploy
+
+# Enable Buildkit and let compose use it to speed up image building
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  TAGVERSION: latest
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+
+    name: 'Deploy to AWS'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Copy env files
+        uses: prewk/s3-cp-action@v1
+        with:
+          args: --recursive
+        env:
+          SOURCE: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/.envs/.production/
+          DEST: .envs/.production/
+
+      - name: Download SSH keys
+        uses: prewk/s3-cp-action@master
+        with:
+          aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          source: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/files/ssh_keys/
+          dest: ./ansible/production/files/ssh_keys/
+          args: --recursive
+
+      - name: Download vault password file
+        uses: prewk/s3-cp-action@v1
+        env:
+          SOURCE: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/vault.pass
+          DEST: ./ansible/production/vault.pass
+
+      - name: Copy SSH keys
+        run: .github/scripts/copy-ssh-keys.sh
+
+      - name: Setup Ansible
+        run: .github/scripts/setup-ansible.sh
+
+      - name: Run Deployment
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: academusoftv2.yml
+          directory: ./ansible/production/
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: ${{ secrets.ANSIBLE_INVENTORY }}
+          vault_password: ${{ secrets.VAULT_PASSWORD }}
+          options: |
+            --verbose
+            --tags deploy

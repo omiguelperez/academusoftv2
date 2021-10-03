@@ -1,0 +1,61 @@
+name: Staging build and push
+
+# Enable Buildkit and let compose use it to speed up image building
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  TAGVERSION: latest
+  ECR_ENVIRONMENT: production
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+
+  build:
+
+    name: 'Build and push to ECR'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build image tag version
+        env:
+          TAGVERSION: ${{ steps.vars.outputs.tag }}
+        run: docker-compose -f local.yml build
+
+      - name: Build image latest
+        run: docker-compose -f local.yml build
+
+      - name: Push image to ECR tag version
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          TAGVERSION: ${{ steps.vars.outputs.tag }}
+        run: docker-compose -f local.yml push
+
+      - name: Push image to ECR latest
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker-compose -f local.yml push
