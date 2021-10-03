@@ -33,12 +33,6 @@ jobs:
           dest: ./ansible/production/files/ssh_keys/
           args: --recursive
 
-      - name: Download vault password file
-        uses: prewk/s3-cp-action@v1
-        env:
-          SOURCE: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/vault.pass
-          DEST: ./ansible/production/vault.pass
-
       - name: Copy SSH keys
         run: .github/scripts/copy-ssh-keys.sh
 
