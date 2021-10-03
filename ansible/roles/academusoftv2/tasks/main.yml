@@ -1,0 +1,293 @@
+---
+
+- name: Install global requirements
+  tags: [ 'req' ]
+  block:
+
+    - name: Install unzip
+      apt: name={{item}} state=latest update_cache=yes force_apt_get=yes
+      with_items:
+        - unzip
+        - python3
+        - python3-pip
+
+    - name: Download awscliv2
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: ~/awscliv2.zip
+        mode: '0777'
+
+    - name: Create aws directory
+      shell: "mkdir -p ~/aws"
+
+    - name: Extract awscliv2.zip into ~/aws
+      ansible.builtin.unarchive:
+        src: ~/awscliv2.zip
+        dest: ~/
+        remote_src: yes
+
+    - name: Install AWS CLI 2
+      shell: ~/aws/install --update
+
+    - name: Install PIP requirements
+      pip:
+        name:
+          - jsondiff  # required by community.general.docker_stack
+
+
+- name: Install Docker
+  tags: [ 'req', 'docker' ]
+  block:
+
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Creating group "docker" as a pre-requisite for docker
+      group:
+        name: docker
+        state: present
+
+    - name: Adding (or creating if doesn't exist) desired user "docker"  to put in group "docker"
+      user:
+        name: docker
+        comment: Docker user
+        group: docker
+        home: /home/docker
+        shell: /bin/bash
+        state: present
+
+    - name: Upgrade pip
+      shell: pip3 install --upgrade pip
+
+    - name: Install missing deps for docker-compose
+      pip:
+        name:
+          - setuptools-rust
+          - cryptography<3.4
+
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 777
+
+    - name: Force docker-compose execution permission
+      shell: "sudo chmod +x /usr/local/bin/docker-compose"
+
+    - name: Restarting docker service
+      service:
+        name: docker
+        state: reloaded
+
+    - name: reset ssh connection to allow user changes to affect 'current login user'
+      meta: reset_connection
+
+    - name: Install docker-compose
+      pip:
+        name:
+          - docker-compose  # required by community.general.docker_compose
+
+
+- name: Clone repositories
+  tags: [ 'repos' ]
+  block:
+
+    - name: Copy Github SSH keys
+      copy:
+        src="ssh_keys/github/{{ item }}"
+        dest="~/.ssh/{{ item }}"
+        mode=0600
+      with_items: "{{ github_ssh_keys }}"
+
+    - name: Register GitHub fingerprint
+      shell: "ssh-keyscan github.com >> ~/.ssh/known_hosts"
+#
+#    - name: Clone deploy repository
+#      tags: [ 'deploy' ]
+#      git:
+#        repo: "git@github.com:FZ-academia/{{ deploy_repo }}.git"
+#        dest: "~/{{ deploy_repo }}"
+#        update: yes
+#        force: yes
+#        version: master
+#
+#    - name: Clone client repository
+#      git:
+#        repo: "git@github.com:FZ-academia/{{ client_repo }}.git"
+#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/data"
+#        update: yes
+#        version: master
+
+    - name: Clone backend repository
+      git:
+        repo: "git@github.com:omiguelperez/{{ backend_repo }}.git"
+        dest: "~/{{ backend_repo }}"
+        update: yes
+        version: master
+
+
+- name: Run docker services
+  tags: [ 'deploy' ]
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry }}"
+    AWS_ACCESS_KEY_ID: "{{ ec2_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ ec2_secret_key }}"
+    AWS_DEFAULT_REGION: "{{ region }}"
+    TAGVERSION: latest
+    ECR_ENVIRONMENT: local
+  block:
+
+    - name: Prune everything to cleanup space on device
+      community.general.docker_prune:
+        containers: yes
+        images: yes
+        networks: no
+        volumes: no
+        builder_cache: yes
+
+    - name: Create a network
+      community.general.docker_network:
+        name: "{{ docker_network }}"
+        attachable: yes
+
+#    - name: Kill nginx service
+#      community.general.docker_compose:
+#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb/"
+#        build: no
+#        stopped: yes
+#        files:
+#          - "lb.push.yml"
+
+    - name: Kill backend service
+      community.general.docker_compose:
+        project_src: "~/{{ backend_repo }}"
+        build: no
+        stopped: yes
+        files:
+          - "local.yml"
+          - "local.push.yml"
+
+#    - name: Kill web service
+#      community.general.docker_compose:
+#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/"
+#        build: no
+#        stopped: yes
+#        files:
+#          - "web.push.yml"
+
+    - name: Login to AWS CLI
+      shell: |
+        aws ecr get-login-password \
+          | docker login \
+              --username AWS \
+              --password-stdin ${DOCKER_REGISTRY}
+
+#    - name: Pull web service
+#      shell: |
+#        docker-compose -f web.push.yml -f web.deploy.yml pull
+#      args:
+#        chdir: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web"
+
+    - name: Pull backend service
+      shell: docker-compose -f local.yml -f local.push.yml pull
+      args:
+        chdir: "~/{{ backend_repo }}"
+
+#    - name: Pull nginx service
+#      shell: |
+#        docker-compose -f lb.push.yml -f lb.deploy.yml pull
+#      args:
+#        chdir: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb"
+#
+#    - name: Create product env variables
+#      shell: "mkdir -p ~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/.envs/.production"
+#
+#    - name: Copy backend env files
+#      ansible.builtin.copy:
+#        src: "~/{{ deploy_repo }}/.envs/.production/{{ item }}"
+#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/.envs/.production/{{ item }}"
+#        mode: '0777'
+#        remote_src: yes
+#      with_items:
+#        - .postgres
+#        - .django
+#
+#    - name: Copy firebase file
+#      ansible.builtin.copy:
+#        src: "~/{{ deploy_repo }}/.envs/.production/fz-academia-269503-firebase-adminsdk-mv3rb-e77613bce7.json"
+#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/resources/fz-academia-269503-firebase-adminsdk-mv3rb-e77613bce7.json"
+#        mode: '0777'
+#        remote_src: yes
+
+    - name: Compile django translations
+      shell: |
+        docker-compose \
+          -f local.yml -f local.push.yml \
+          run --rm django python manage.py compilemessages
+      args:
+        chdir: "~/{{ backend_repo }}"
+
+    - name: Apply backend migrations
+      tags: [ 'migrate' ]
+      shell: |
+        docker-compose \
+          -f local.yml -f local.push.yml \
+          run --rm django python manage.py migrate
+      args:
+        chdir: "~/{{ backend_repo }}"
+
+#    - name: Run web service
+#      community.general.docker_compose:
+#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/"
+#        build: no
+#        pull: yes
+#        files:
+#          - "web.push.yml"
+#          - "web.deploy.yml"
+#      register: run_web_output
+
+    - name: Run backend service
+      community.general.docker_compose:
+        project_src: "~/{{ backend_repo }}"
+        build: no
+        pull: yes
+        files:
+          - "local.yml"
+          - "local.push.yml"
+        services:
+          - django
+          - postgres
+          - redis
+        state: present
+      register: run_backend_output
+
+#    - name: Run nginx service
+#      community.general.docker_compose:
+#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb/"
+#        build: no
+#        pull: yes
+#        files:
+#          - "lb.push.yml"
+#          - "lb.deploy.yml"
+#      register: run_lb_output

@@ -1,0 +1,20 @@
+
+
+---
+
+- hosts: aws_production
+  become: yes
+  become_user: root
+
+  roles:
+    - academusoftv2
+
+  vars:
+    region: us-east-2
+    backend_repo: agile-academusoft-v2-backend
+    docker_network: agile_academusoft_network
+    services:
+      - 2.backend
+    github_ssh_keys:
+      - id_rsa.pub
+      - id_rsa

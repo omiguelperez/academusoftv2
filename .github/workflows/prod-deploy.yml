@@ -24,14 +24,6 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v2
 
-      - name: Copy env files
-        uses: prewk/s3-cp-action@v1
-        with:
-          args: --recursive
-        env:
-          SOURCE: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/.envs/.production/
-          DEST: .envs/.production/
-
       - name: Download SSH keys
         uses: prewk/s3-cp-action@master
         with:
