@@ -44,18 +44,18 @@ jobs:
       - name: Build image tag version
         env:
           TAGVERSION: ${{ steps.vars.outputs.tag }}
-        run: docker-compose -f local.yml build
+        run: docker-compose -f local.yml -f local.push.yml build
 
       - name: Build image latest
-        run: docker-compose -f local.yml build
+        run: docker-compose -f local.yml -f local.push.yml build
 
       - name: Push image to ECR tag version
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           TAGVERSION: ${{ steps.vars.outputs.tag }}
-        run: docker-compose -f local.yml push
+        run: docker-compose -f local.yml -f local.push.yml push
 
       - name: Push image to ECR latest
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker-compose -f local.yml push
+        run: docker-compose -f local.yml -f local.push.yml push
