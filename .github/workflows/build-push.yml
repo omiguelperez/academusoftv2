@@ -9,7 +9,7 @@ env:
   DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
   AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   TAGVERSION: latest
-  ECR_ENVIRONMENT: production
+  ECR_ENVIRONMENT: local
 
 on:
   workflow_dispatch:
