@@ -1,0 +1,122 @@
+name: CI Delivery Deploy
+
+# Enable Buildkit and let compose use it to speed up image building
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+on:
+  pull_request:
+    branches: [ "master", "main" ]
+    paths-ignore: [ "docs/**" ]
+
+  push:
+    branches: [ "master", "main" ]
+    paths-ignore: [ "docs/**" ]
+
+
+jobs:
+
+  # With no caching at all the entire ci process takes 4m 30s to complete!
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Build the Stack
+        run:  docker-compose -f local.yml build
+
+      - name: Run DB Migrations
+        run:  docker-compose -f local.yml run --rm django python manage.py migrate
+
+      - name: Run Django Tests
+        run:  docker-compose -f local.yml run django pytest
+
+      - name: Tear down the Stack
+        run:  docker-compose -f local.yml down
+
+  build:
+
+    needs:
+      - pytest
+    name: 'Build and push to ECR'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build image tag version
+        env:
+          TAGVERSION: ${{ steps.vars.outputs.tag }}
+        run: docker-compose -f local.yml -f local.push.yml build
+
+      - name: Build image latest
+        run: docker-compose -f local.yml -f local.push.yml build
+
+      - name: Push image to ECR tag version
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          TAGVERSION: ${{ steps.vars.outputs.tag }}
+        run: docker-compose -f local.yml -f local.push.yml push
+
+      - name: Push image to ECR latest
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker-compose -f local.yml -f local.push.yml push
+
+  deploy:
+
+    needs:
+      - build
+    name: 'Deploy to AWS'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Download SSH keys
+        uses: prewk/s3-cp-action@master
+        with:
+          aws_access_key_id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          source: s3://${{ secrets.ANSIBLE_SECRETS_BUCKET }}/files/ssh_keys/
+          dest: ./ansible/production/files/ssh_keys/
+          args: --recursive
+
+      - name: Copy SSH keys
+        run: .github/scripts/copy-ssh-keys.sh
+
+      - name: Setup Ansible
+        run: .github/scripts/setup-ansible.sh
+
+      - name: Run Deployment
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: academusoftv2.yml
+          directory: ./ansible/
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: ${{secrets.ANSIBLE_INVENTORY}}
+          vault_password: ${{secrets.VAULT_PASSWORD}}
+          options: |
+            --verbose
+            --tags deploy
