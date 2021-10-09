@@ -116,4 +116,4 @@ jobs:
           vault_password: ${{secrets.VAULT_PASSWORD}}
           options: |
             --verbose
-            --tags deploy
+            --tags repos,deploy
