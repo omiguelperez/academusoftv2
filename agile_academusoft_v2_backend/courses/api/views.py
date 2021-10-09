@@ -1,14 +1,15 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .serializers import (
     CourseSerializer,
     CourseGroupScheduleSerializer,
     EnrollmentSerializer,
-    UnenrollmentSerializer, EnrolledCourseGroupSerializer,
+    UnenrollmentSerializer, EnrolledCourseGroupSerializer, FullScheduleSerializer,
 )
-from ..models import Course, Schedule
+from ..models import Course, Schedule, StudentEnrollment
 from ..queries import list_courses_for_enrolling
 
 
@@ -69,3 +70,17 @@ class CourseViewSet(viewsets.ModelViewSet):
             context={'request': request}
         )
         return Response(serializer.data)
+
+
+class ScheduleAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        queryset = Schedule.objects.all()
+        enrollments = StudentEnrollment.objects.filter(student=self.request.user.student)
+
+        queryset = queryset.filter(
+            course_group__students__id__in=enrollments.values('id'),
+        )
+        serializer = FullScheduleSerializer(queryset, many=True)
+        return Response(serializer.data)
+

@@ -38,6 +38,11 @@ class CourseGroupScheduleSerializer(serializers.Serializer):
     end_time = serializers.IntegerField()
 
 
+class FullScheduleSerializer(CourseGroupScheduleSerializer):
+    course_code = serializers.CharField(source='course_group.course.code')
+    course_name = serializers.CharField(source='course_group.course.name')
+
+
 class EnrollmentSerializer(serializers.Serializer):
     group = serializers.PrimaryKeyRelatedField(queryset=CourseGroup.objects.all())
 
@@ -61,4 +66,3 @@ class UnenrollmentSerializer(serializers.Serializer):
             student_id=user.id,
             course_group=self.validated_data['group'],
         ).delete()
-
