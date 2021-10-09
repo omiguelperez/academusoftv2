@@ -12,12 +12,8 @@ env:
   ECR_ENVIRONMENT: local
 
 on:
-  pull_request:
-    branches: [ "master", "main" ]
-    paths-ignore: [ "docs/**" ]
-
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master" ]
     paths-ignore: [ "docs/**" ]
 
 
@@ -79,13 +75,10 @@ jobs:
 
       - name: Push image to ECR tag version
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           TAGVERSION: ${{ steps.vars.outputs.tag }}
         run: docker-compose -f local.yml -f local.push.yml push
 
       - name: Push image to ECR latest
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: docker-compose -f local.yml -f local.push.yml push
 
   deploy:
