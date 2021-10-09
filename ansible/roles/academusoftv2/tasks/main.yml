@@ -123,22 +123,6 @@
     - name: Register GitHub fingerprint
       shell: "ssh-keyscan github.com >> ~/.ssh/known_hosts"
 #
-#    - name: Clone deploy repository
-#      tags: [ 'deploy' ]
-#      git:
-#        repo: "git@github.com:FZ-academia/{{ deploy_repo }}.git"
-#        dest: "~/{{ deploy_repo }}"
-#        update: yes
-#        force: yes
-#        version: master
-#
-#    - name: Clone client repository
-#      git:
-#        repo: "git@github.com:FZ-academia/{{ client_repo }}.git"
-#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/data"
-#        update: yes
-#        version: master
-
     - name: Clone backend repository
       git:
         repo: "git@github.com:omiguelperez/{{ backend_repo }}.git"
@@ -166,35 +150,25 @@
         volumes: no
         builder_cache: yes
 
+    - name: Ensure space cleanup
+      shell: |
+        docker rm -f $(docker ps -aq)
+        docker rmi -f $(docker images -aq)
+        rm -rfv /var/logs
+
     - name: Create a network
       community.general.docker_network:
         name: "{{ docker_network }}"
         attachable: yes
 
-#    - name: Kill nginx service
-#      community.general.docker_compose:
-#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb/"
-#        build: no
-#        stopped: yes
-#        files:
-#          - "lb.push.yml"
-
     - name: Kill backend service
       community.general.docker_compose:
-        project_src: "~/{{ backend_repo }}"
+        project_src: "~/{{ backend_repo }}/"
         build: no
         stopped: yes
         files:
           - "local.yml"
           - "local.push.yml"
-
-#    - name: Kill web service
-#      community.general.docker_compose:
-#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/"
-#        build: no
-#        stopped: yes
-#        files:
-#          - "web.push.yml"
 
     - name: Login to AWS CLI
       shell: |
@@ -203,42 +177,10 @@
               --username AWS \
               --password-stdin ${DOCKER_REGISTRY}
 
-#    - name: Pull web service
-#      shell: |
-#        docker-compose -f web.push.yml -f web.deploy.yml pull
-#      args:
-#        chdir: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web"
-
     - name: Pull backend service
       shell: docker-compose -f local.yml -f local.push.yml pull
       args:
         chdir: "~/{{ backend_repo }}"
-
-#    - name: Pull nginx service
-#      shell: |
-#        docker-compose -f lb.push.yml -f lb.deploy.yml pull
-#      args:
-#        chdir: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb"
-#
-#    - name: Create product env variables
-#      shell: "mkdir -p ~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/.envs/.production"
-#
-#    - name: Copy backend env files
-#      ansible.builtin.copy:
-#        src: "~/{{ deploy_repo }}/.envs/.production/{{ item }}"
-#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/.envs/.production/{{ item }}"
-#        mode: '0777'
-#        remote_src: yes
-#      with_items:
-#        - .postgres
-#        - .django
-#
-#    - name: Copy firebase file
-#      ansible.builtin.copy:
-#        src: "~/{{ deploy_repo }}/.envs/.production/fz-academia-269503-firebase-adminsdk-mv3rb-e77613bce7.json"
-#        dest: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/2.backend/data/resources/fz-academia-269503-firebase-adminsdk-mv3rb-e77613bce7.json"
-#        mode: '0777'
-#        remote_src: yes
 
     - name: Compile django translations
       shell: |
@@ -257,16 +199,6 @@
       args:
         chdir: "~/{{ backend_repo }}"
 
-#    - name: Run web service
-#      community.general.docker_compose:
-#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/3.web/"
-#        build: no
-#        pull: yes
-#        files:
-#          - "web.push.yml"
-#          - "web.deploy.yml"
-#      register: run_web_output
-
     - name: Run backend service
       community.general.docker_compose:
         project_src: "~/{{ backend_repo }}"
@@ -281,13 +213,3 @@
           - redis
         state: present
       register: run_backend_output
-
-#    - name: Run nginx service
-#      community.general.docker_compose:
-#        project_src: "~/{{ deploy_repo }}/src/fzacademia-test.xyz/1.lb/"
-#        build: no
-#        pull: yes
-#        files:
-#          - "lb.push.yml"
-#          - "lb.deploy.yml"
-#      register: run_lb_output
