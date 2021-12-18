@@ -10,10 +10,10 @@ User = get_user_model()
 
 
 @admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
+class UserAdmin(admin.ModelAdmin):
 
-    form = UserChangeForm
-    add_form = UserCreationForm
+    # form = UserChangeForm
+    # add_form = UserCreationForm
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (_("Personal info"), {"fields": ("name", "email")}),
@@ -25,7 +25,6 @@ class UserAdmin(auth_admin.UserAdmin):
                     "is_staff",
                     "is_superuser",
                     "groups",
-                    "user_permissions",
                 ),
             },
         ),
