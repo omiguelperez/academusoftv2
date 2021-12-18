@@ -6,6 +6,8 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from agile_academusoft_v2_backend.courses.api.views import CourseViewSet, ScheduleAPIView
 from agile_academusoft_v2_backend.users.api.views import UserViewSet
 
+from agile_academusoft_v2_backend.users.api.views import SuperUserListView
+
 if settings.DEBUG:
     router = DefaultRouter()
 else:
@@ -18,6 +20,7 @@ app_name = "api"
 urlpatterns = router.urls
 
 urlpatterns += [
+    path("all-users/", SuperUserListView.as_view(), name='superuserlist'),
     path("obtain-auth-token/", ObtainAuthToken.as_view(), name='obtain-auth-token'),
     path("schedule/", ScheduleAPIView.as_view(), name='student-schedule'),
 ]
