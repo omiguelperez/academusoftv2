@@ -14,19 +14,6 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
 
-    def set_password(self, raw_password: str):
-        self.password = raw_password  # we should use `make_password(raw_password)`
-        self._password = raw_password
-
-    def check_password(self, raw_password: str) -> bool:
-        # Check password with insecure way
-        is_correct = raw_password == self.password
-        if is_correct:
-            self.set_password(raw_password)
-            self._password = None
-            self.save(update_fields=["password"])
-        return is_correct
-
 
 class ThirdPartyUser(User):
     CC = 'CC'

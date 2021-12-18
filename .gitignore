@@ -334,6 +334,3 @@ agile_academusoft_v2_backend/media/
 .env
 .envs/.local
 !.envs/.local/
-
-# Project
-.idea/
