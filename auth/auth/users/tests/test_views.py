@@ -8,10 +8,10 @@ from django.http import HttpRequest
 from django.test import RequestFactory
 from django.urls import reverse
 
-from agile_academusoft_v2_backend.users.forms import UserChangeForm
-from agile_academusoft_v2_backend.users.models import User
-from agile_academusoft_v2_backend.users.tests.factories import UserFactory
-from agile_academusoft_v2_backend.users.views import (
+from auth.users.forms import UserChangeForm
+from auth.users.models import User
+from auth.users.tests.factories import UserFactory
+from auth.users.views import (
     UserRedirectView,
     UserUpdateView,
     user_detail_view,

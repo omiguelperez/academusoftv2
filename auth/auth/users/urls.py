@@ -1,6 +1,6 @@
 from django.urls import path
 
-from agile_academusoft_v2_backend.users.views import (
+from auth.users.views import (
     user_detail_view,
     user_redirect_view,
     user_update_view,

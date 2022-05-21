@@ -1,6 +1,6 @@
 import pytest
 
-from agile_academusoft_v2_backend.users.models import User
+from auth.users.models import User
 
 pytestmark = pytest.mark.django_db
 

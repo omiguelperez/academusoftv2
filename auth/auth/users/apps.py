@@ -8,6 +8,6 @@ class UsersConfig(AppConfig):
 
     def ready(self):
         try:
-            import agile_academusoft_v2_backend.users.signals  # noqa F401
+            import auth.users.signals  # noqa F401
         except ImportError:
             pass

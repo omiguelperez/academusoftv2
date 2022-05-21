@@ -1,8 +1,8 @@
 import pytest
 from celery.result import EagerResult
 
-from agile_academusoft_v2_backend.users.tasks import get_users_count
-from agile_academusoft_v2_backend.users.tests.factories import UserFactory
+from auth.users.tasks import get_users_count
+from auth.users.tests.factories import UserFactory
 
 pytestmark = pytest.mark.django_db
 

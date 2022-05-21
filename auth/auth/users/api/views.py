@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
-from agile_academusoft_v2_backend.users.api.permissions import IsSuperUser
+from auth.users.api.permissions import IsSuperUser
 
 from .serializers import UserSerializer
 

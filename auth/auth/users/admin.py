@@ -3,8 +3,8 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from agile_academusoft_v2_backend.users.forms import UserChangeForm, UserCreationForm
-from agile_academusoft_v2_backend.users.models import Student, Teacher
+from auth.users.forms import UserChangeForm, UserCreationForm
+from auth.users.models import Student, Teacher
 
 User = get_user_model()
 

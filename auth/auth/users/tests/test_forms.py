@@ -4,8 +4,8 @@ Module for all Form Tests.
 import pytest
 from django.utils.translation import gettext_lazy as _
 
-from agile_academusoft_v2_backend.users.forms import UserCreationForm
-from agile_academusoft_v2_backend.users.models import User
+from auth.users.forms import UserCreationForm
+from auth.users.models import User
 
 pytestmark = pytest.mark.django_db
 

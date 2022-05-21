@@ -1,8 +1,8 @@
 import pytest
 from django.test import RequestFactory
 
-from agile_academusoft_v2_backend.users.api.views import UserViewSet
-from agile_academusoft_v2_backend.users.models import User
+from auth.users.api.views import UserViewSet
+from auth.users.models import User
 
 pytestmark = pytest.mark.django_db
 

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from agile_academusoft_v2_backend.users.models import Student, Teacher
+from auth.users.models import Student, Teacher
 
 User = get_user_model()
 
