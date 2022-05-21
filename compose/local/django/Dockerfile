@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION=3.9-slim-buster
+ARG PYTHON_VERSION=3.9-slim-bullseye
 
 # define an alias for the specfic python version used in this file.
 FROM python:${PYTHON_VERSION} as python
@@ -9,7 +9,7 @@ FROM python as python-build-stage
 ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
-RUN apt-get update && apt-get install --no-install-recommends -y \
+RUN apt-get update && apt-get install -y \
   # dependencies for building Python packages
   build-essential \
   # psycopg2 dependencies
@@ -36,14 +36,11 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 WORKDIR ${APP_HOME}
 
 # Install required system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
+RUN apt-get update && apt-get install -y \
+  # dependencies for building Python packages
+  build-essential \
   # psycopg2 dependencies
-  libpq-dev \
-  # Translations dependencies
-  gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+  libpq-dev
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
