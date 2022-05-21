@@ -6,8 +6,8 @@ from pathlib import Path
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# agile_academusoft_v2_backend/
-APPS_DIR = ROOT_DIR / "agile_academusoft_v2_backend"
+# auth/
+APPS_DIR = ROOT_DIR / "auth"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -75,8 +75,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "agile_academusoft_v2_backend.users.apps.UsersConfig",
-    "agile_academusoft_v2_backend.courses.apps.CoursesConfig"
+    "auth.users.apps.UsersConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -84,7 +83,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "agile_academusoft_v2_backend.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "auth.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -183,7 +182,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "agile_academusoft_v2_backend.utils.context_processors.settings_context",
+                "auth.utils.context_processors.settings_context",
             ],
         },
     }
@@ -287,9 +286,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "agile_academusoft_v2_backend.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "auth.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "agile_academusoft_v2_backend.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "auth.users.adapters.SocialAccountAdapter"
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

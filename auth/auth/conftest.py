@@ -1,7 +1,7 @@
 import pytest
 
-from agile_academusoft_v2_backend.users.models import User
-from agile_academusoft_v2_backend.users.tests.factories import UserFactory
+from auth.users.models import User
+from auth.users.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)
