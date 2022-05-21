@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: compose/local/django/Dockerfile
-    image: agile_academusoft_v2_backend_local_django
+    image: enrollment_local_django
     container_name: django
     depends_on:
       - postgres
@@ -22,23 +22,11 @@ services:
       - "8000:8000"
     command: /start
 
-#  nodejs:
-#    build:
-#      context: .
-#      dockerfile: compose/local/nodejs/Dockerfile
-#    image: agile_academusoft_v2_front_local_nodejs
-#    container_name: nodejs
-#    ports:
-#      - 5000:5000
-#    depends_on:
-#      - django
-#    command: /start
-
   postgres:
     build:
       context: .
       dockerfile: compose/production/postgres/Dockerfile
-    image: agile_academusoft_v2_backend_local_postgres
+    image: enrollment_local_postgres
     container_name: postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z

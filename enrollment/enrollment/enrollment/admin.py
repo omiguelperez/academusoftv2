@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from agile_academusoft_v2_backend.courses.models import (
+from enrollment.courses.models import (
     StudentEnrollment,
     CourseGroup,
     Course,

@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.db import models
 
-from agile_academusoft_v2_backend.utils.models import AgileAcademusoftV2BackendModel
+from enrollment.utils.models import AgileAcademusoftV2BackendModel
 
 
 class Course(AgileAcademusoftV2BackendModel):
