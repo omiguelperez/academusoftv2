@@ -4,7 +4,7 @@ How To - Project Documentation
 Get Started
 ----------------------------------------------------------------------
 
-Documentation can be written as rst files in `agile_academusoft_v2_backend/docs`.
+Documentation can be written as rst files in `courses/docs`.
 
 
 To build and serve docs, use the commands::

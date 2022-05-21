@@ -17,13 +17,13 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(CourseGroup)
 class CourseGroupAdmin(admin.ModelAdmin):
     list_display = ['course', 'name', 'teacher', 'year', 'semester']
-    search_fields = ['course__name', 'name', 'teacher__name']
+    search_fields = ['course__name', 'name']
 
 
 @admin.register(StudentEnrollment)
 class StudentEnrollmentAdmin(admin.ModelAdmin):
     list_display = ['student', 'course_group']
-    autocomplete_fields = ['course_group', 'student']
+    autocomplete_fields = ['course_group']
 
 
 @admin.register(Schedule)

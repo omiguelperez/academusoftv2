@@ -40,7 +40,7 @@ Running type checks with mypy:
 
 ::
 
-  $ mypy agile_academusoft_v2_backend
+  $ mypy courses
 
 Test coverage
 ^^^^^^^^^^^^^
@@ -74,7 +74,7 @@ To run a celery worker:
 
 .. code-block:: bash
 
-    cd agile_academusoft_v2_backend
+    cd courses
     celery -A config.celery_app worker -l info
 
 Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the same folder with *manage.py*, you should be right.
