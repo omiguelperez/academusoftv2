@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-from agile_academusoft_v2_backend.courses.models import Course
+from courses.courses.models import Course
 
 
 def list_enrolled_courses(logged_user):

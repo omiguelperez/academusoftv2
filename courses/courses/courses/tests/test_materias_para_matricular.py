@@ -1,8 +1,8 @@
 import pytest
 
-from agile_academusoft_v2_backend.courses.models import Course, CourseGroup, Schedule
-from agile_academusoft_v2_backend.courses.queries import list_by_enrolling_courses
-from agile_academusoft_v2_backend.users.models import Teacher, Student
+from courses.courses.models import Course, CourseGroup, Schedule
+from courses.courses.queries import list_by_enrolling_courses
+from courses.users.models import Teacher, Student
 
 pytestmark = pytest.mark.django_db
 

@@ -8,9 +8,9 @@ volumes:
 services:
   django: &django
     build:
-      context: agile_academusoft_v2_backend
+      context: courses
       dockerfile: compose/production/django/Dockerfile
-    image: agile_academusoft_v2_backend_production_django
+    image: courses_production_django
     depends_on:
       - postgres
       - redis
@@ -21,9 +21,9 @@ services:
 
   postgres:
     build:
-      context: agile_academusoft_v2_backend
+      context: courses
       dockerfile: compose/production/postgres/Dockerfile
-    image: agile_academusoft_v2_backend_production_postgres
+    image: courses_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
       - production_postgres_data_backups:/backups:z
@@ -32,9 +32,9 @@ services:
 
   traefik:
     build:
-      context: agile_academusoft_v2_backend
+      context: courses
       dockerfile: compose/production/traefik/Dockerfile
-    image: agile_academusoft_v2_backend_production_traefik
+    image: courses_production_traefik
     depends_on:
       - django
     volumes:
@@ -49,22 +49,22 @@ services:
 
   celeryworker:
     <<: *django
-    image: agile_academusoft_v2_backend_production_celeryworker
+    image: courses_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: agile_academusoft_v2_backend_production_celerybeat
+    image: courses_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: agile_academusoft_v2_backend_production_flower
+    image: courses_production_flower
     command: /start-flower
 
   awscli:
     build:
-      context: agile_academusoft_v2_backend
+      context: courses
       dockerfile: compose/production/aws/Dockerfile
     env_file:
       - .envs/.production/.django

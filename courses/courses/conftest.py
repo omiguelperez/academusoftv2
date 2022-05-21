@@ -1,6 +1,6 @@
 import pytest
 
-from agile_academusoft_v2_backend.users.models import User
+from courses.users.models import User
 from agile_academusoft_v2_backend.users.tests.factories import UserFactory
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from agile_academusoft_v2_backend.courses.models import (
+from courses.courses.models import (
     Course,
     CourseGroup,
     StudentEnrollment,
