@@ -1,0 +1,15 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - provision
+
+  vars:
+    key_name: academusoftv2_ansible_aws
+    region: us-east-2
+    image: ami-0b9064170e32bde34 # https://cloud-images.ubuntu.com/locator/ec2/
+    id: "academusoftv2-production-instance"
+    sec_group: "{{ id }}-sec"

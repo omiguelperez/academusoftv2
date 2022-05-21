@@ -1,0 +1,101 @@
+---
+
+- name: Facts
+  block:
+
+    - name: Get instances facts
+      ec2_instance_info:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+        region: "{{ region }}"
+      register: result
+
+    - name: Instances ID
+      debug:
+        msg: "ID: {{ item.instance_id }} - State: {{ item.state.name }} - Public DNS: {{ item.public_dns_name }}"
+      loop: "{{ result.instances }}"
+
+  tags: always
+
+
+- name: Provisioning EC2 instances
+  tags: [ 'ec2' ]
+  block:
+
+    - name: Upload public key to AWS
+      ec2_key:
+        name: "{{ key_name }}"
+        key_material: "{{ lookup('file', './files/ssh_keys/instance/{{ key_name }}.pub') }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+    - name: Create security group
+      ec2_group:
+        name: "{{ sec_group }}"
+        description: "Sec group for app {{ id }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all on ssh port
+          - proto: tcp
+            ports:
+              - 80
+              - 443
+              - 8000
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all on http and https ports
+          - proto: tcp
+            ports:
+              - 5432
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow postgres port
+      register: result_sec_group
+
+    - name: Create subnet
+      amazon.aws.ec2_vpc_subnet:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+        region: "{{ region }}"
+        state: present
+        vpc_id: "{{ result_sec_group.vpc_id }}"
+        cidr: 172.31.32.0/20
+      register: result_vpc_subnet
+
+    - name: Provision instance(s)
+      amazon.aws.ec2:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+        key_name: "{{ key_name }}"
+        id: "{{ id }}"
+        group_id: "{{ result_sec_group.group_id }}"
+        image: "{{ image }}"
+        instance_type: t2.medium
+        region: "{{ region }}"
+        wait: yes
+        vpc_subnet_id: "{{ result_vpc_subnet.subnet.id }}"
+        count: 1
+        assign_public_ip: yes
+        monitoring: yes
+        volumes:
+          - device_name: /dev/xvda
+            volume_type: gp2
+            volume_size: 30
+      register: production_instance
+
+    - name: Allocating elastic IP to instance
+      ec2_eip:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+        in_vpc: yes
+        reuse_existing_ip_allowed: yes
+        state: present
+        region: "{{ region }}"
+        instance_id: "{{ production_instance.instance_ids[0] }}"
+      register: instance_eip
+    - debug: var=instance_eip.public_ip
