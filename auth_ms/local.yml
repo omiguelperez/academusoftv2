@@ -10,9 +10,9 @@ services:
       context: .
       dockerfile: compose/local/django/Dockerfile
     image: auth_local_django
-    container_name: auth_django
+    container_name: auth_ms
     depends_on:
-      - postgres
+      - auth_db
     volumes:
       - .:/app:z
     env_file:
@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: compose/production/postgres/Dockerfile
     image: auth_local_postgres
-    container_name: auth_postgres
+    container_name: auth_db
     volumes:
       - auth_local_postgres_data:/var/lib/postgresql/data:Z
       - auth_local_postgres_data_backups:/backups:z
