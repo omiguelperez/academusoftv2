@@ -3,9 +3,7 @@ from django.urls import path
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from auth.users.api.views import UserViewSet
-
-from auth.users.api.views import SuperUserListView
+from auth.users.api.views import UserViewSet, SuperUserListView
 
 if settings.DEBUG:
     router = DefaultRouter()
