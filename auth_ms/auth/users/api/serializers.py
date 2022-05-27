@@ -20,7 +20,7 @@ class StudentSerializer(UserSerializer):
         fields = UserSerializer.Meta.fields + ['nuip']
 
 
-class TeacherSerialiazer(UserSerializer):
+class TeacherSerializer(UserSerializer):
     nuip = serializers.CharField()
 
     class Meta(UserSerializer.Meta):

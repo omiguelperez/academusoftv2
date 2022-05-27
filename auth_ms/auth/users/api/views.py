@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from auth.users.api.permissions import IsSuperUser
+from auth.users.models import Student, Teacher
+from auth.users.api.serializers import StudentSerializer, TeacherSerializer
 
 from .serializers import UserSerializer
 
@@ -26,6 +28,18 @@ class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateMo
     def me(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+class StudentViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateModelMixin, GenericViewSet):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
+
+
+class TeacherViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateModelMixin, GenericViewSet):
+    serializer_class = TeacherSerializer
+    queryset = Teacher.objects.all()
+
+
 
 
 class SuperUserListView(APIView):
