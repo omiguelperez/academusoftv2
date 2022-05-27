@@ -24,8 +24,8 @@ if __name__ == "__main__":
         raise
 
     # This allows easy placement of apps within the interior
-    # agile_academusoft_v2_backend directory.
+    # enrollment directory.
     current_path = Path(__file__).parent.resolve()
-    sys.path.append(str(current_path / "agile_academusoft_v2_backend"))
+    sys.path.append(str(current_path / "enrollment"))
 
     execute_from_command_line(sys.argv)

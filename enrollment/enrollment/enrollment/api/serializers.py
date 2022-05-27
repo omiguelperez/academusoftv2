@@ -1,23 +1,18 @@
 from rest_framework import serializers
 
-from enrollment.courses.models import (
-    Course,
+from enrollment.enrollment.models import (
     CourseGroup,
     StudentEnrollment,
 )
 
 
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
+class CourseSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    description = serializers.CharField()
 
 
 class EnrolledCourseGroupSerializer(CourseSerializer):
     group = serializers.SerializerMethodField()
-
-    class Meta(CourseSerializer.Meta):
-        model = Course
 
     def get_group(self, obj):
         user = self.context['request'].user

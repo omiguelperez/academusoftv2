@@ -2,12 +2,12 @@ from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
 
-class CoursesConfig(AppConfig):
-    name = "agile_academusoft_v2_backend.courses"
-    verbose_name = _("Courses")
+class EnrollmentConfig(AppConfig):
+    name = "enrollment.enrollment"
+    verbose_name = _("Enrollment")
 
     def ready(self):
         try:
-            import enrollment.courses.signals  # noqa F401
+            import enrollment.enrollment.signals  # noqa F401
         except ImportError:
             pass

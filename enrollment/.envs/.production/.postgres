@@ -2,6 +2,6 @@
 # ------------------------------------------------------------------------------
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=agile_academusoft_v2_backend
+POSTGRES_DB=enrollment
 POSTGRES_USER=MWiLKMfTThABnPVDFytOXVfIyOnCMfMd
 POSTGRES_PASSWORD=FygHlJnGPm8VXVWnUWCSYIxqGNJhuVPeu8waiO1ksyw4hIVcXLCDSQcJG6N3t5g4

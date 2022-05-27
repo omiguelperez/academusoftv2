@@ -9,13 +9,12 @@ from .serializers import (
     EnrollmentSerializer,
     UnenrollmentSerializer, EnrolledCourseGroupSerializer, FullScheduleSerializer,
 )
-from ..models import Course, Schedule, StudentEnrollment
+from ..models import Schedule, StudentEnrollment
 from ..queries import list_courses_for_enrolling
 
 
 # /api/courses/
 class CourseViewSet(viewsets.ModelViewSet):
-    serializer_class = CourseSerializer
 
     def get_queryset(self):
         queryset = Course.objects.all()

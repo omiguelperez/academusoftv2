@@ -15,7 +15,7 @@ import sys
 import django
 
 if os.getenv("READTHEDOCS", default=False) == "True":
-    sys.path.insert(0, os.path.abspath("../agile_academusoft_v2_backend"))
+    sys.path.insert(0, os.path.abspath("../enrollment"))
     os.environ["DJANGO_READ_DOT_ENV_FILE"] = "True"
     os.environ["USE_DOCKER"] = "no"
 else:

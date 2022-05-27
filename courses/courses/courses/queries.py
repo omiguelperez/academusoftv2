@@ -4,17 +4,19 @@ from courses.courses.models import Course
 
 
 def list_enrolled_courses(logged_user):
-    return Course.objects.filter(course_groups__students__student=logged_user.student)
+    # return Course.objects.filter(course_groups__students__student=logged_user.student)
+    return []
 
 
 def list_by_enrolling_courses(logged_user):
-    enrolled_courses = Course.objects.filter(
-        course_groups__students__student=logged_user.student
-    )
-    courses_by_enrolling = Course.objects.exclude(
-        pk__in=enrolled_courses.values('pk')
-    )
-    return courses_by_enrolling
+    # enrolled_courses = Course.objects.filter(
+    #     course_groups__students__student=logged_user.student
+    # )
+    # courses_by_enrolling = Course.objects.exclude(
+    #     pk__in=enrolled_courses.values('pk')
+    # )
+    # return courses_by_enrolling
+    return []
 
 
 def list_courses_for_enrolling(logged_user, action):

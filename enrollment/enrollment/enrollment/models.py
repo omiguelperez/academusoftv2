@@ -1,4 +1,5 @@
 from decimal import Decimal
+from uuid import uuid4
 from django.utils.translation import gettext_lazy as _
 
 from django.db import models
@@ -6,27 +7,10 @@ from django.db import models
 from enrollment.utils.models import AgileAcademusoftV2BackendModel
 
 
-class Course(AgileAcademusoftV2BackendModel):
-    name = models.CharField(max_length=50)
-    code = models.CharField(max_length=10, unique=True)
-    credits = models.PositiveSmallIntegerField(default=1)
-
-    def __str__(self):
-        return self.name
-
-
 class CourseGroup(AgileAcademusoftV2BackendModel):
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.PROTECT,
-        related_name='course_groups',
-    )
+    course = models.UUIDField(default=uuid4)
     name = models.CharField(max_length=10)
-    teacher = models.ForeignKey(
-        'users.Teacher',
-        on_delete=models.PROTECT,
-        related_name='teacher_groups',
-    )
+    teacher = models.UUIDField(default=uuid4)
 
     # Date
     year = models.PositiveSmallIntegerField()
@@ -46,11 +30,7 @@ class StudentEnrollment(AgileAcademusoftV2BackendModel):
         on_delete=models.PROTECT,
         related_name='students'
     )
-    student = models.ForeignKey(
-        'users.Student',
-        on_delete=models.PROTECT,
-        related_name='enrollments'
-    )
+    student = models.UUIDField(default=uuid4)
 
 
 class Schedule(AgileAcademusoftV2BackendModel):

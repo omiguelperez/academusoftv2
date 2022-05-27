@@ -10,7 +10,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=_source
 set BUILDDIR=_build
-set APP=..\agile_academusoft_v2_backend
+set APP=..\enrollment
 
 if "%1" == "" goto help
 
