@@ -13,20 +13,20 @@ from ..models import Schedule, StudentEnrollment
 from ..queries import list_courses_for_enrolling
 
 
-# /api/courses/
-class CourseViewSet(viewsets.ModelViewSet):
+# /api/enrollment/
+class EnrollmentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
-        queryset = Course.objects.all()
+        queryset = StudentEnrollment.objects.all()
         if self.action in ['enrolled', 'by_enrolling']:
             return list_courses_for_enrolling(self.request.user, action=self.action)
         return queryset
 
     def get_serializer_class(self):
         serializer_class_map = {
-            'enrolled': EnrolledCourseGroupSerializer,
-            'enroll': EnrollmentSerializer,
-            'unenroll': UnenrollmentSerializer,
+            'list': EnrolledCourseGroupSerializer,
+            'create': EnrollmentSerializer,
+            'delete': UnenrollmentSerializer,
         }
         if self.action in serializer_class_map.keys():
             return serializer_class_map[self.action]

@@ -3,14 +3,14 @@ from django.urls import path
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from enrollment.enrollment.api.views import CourseViewSet, ScheduleAPIView
+from enrollment.enrollment.api.views import EnrollmentViewSet, ScheduleAPIView
 
 if settings.DEBUG:
     router = DefaultRouter()
 else:
     router = SimpleRouter()
 
-router.register("courses", CourseViewSet, basename="courses")
+router.register("enrollment", EnrollmentViewSet, basename="enrollment")
 
 app_name = "api"
 urlpatterns = router.urls
