@@ -34,6 +34,6 @@ services:
     env_file:
       - .envs/.local/.postgres
 
-  redis:
+  enrollment_redis:
     image: redis:6
     container_name: enrollment_redis

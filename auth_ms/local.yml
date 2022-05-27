@@ -34,6 +34,6 @@ services:
     env_file:
       - .envs/.local/.postgres
 
-  redis:
+  auth_redis:
     image: redis:6
     container_name: auth_redis

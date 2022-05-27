@@ -336,3 +336,4 @@ auth/media/
 !.envs/.local/
 .idea/
 .vscode/
+.idea

@@ -34,6 +34,6 @@ services:
     env_file:
       - .envs/.local/.postgres
 
-  redis:
+  courses_redis:
     image: redis:6
     container_name: courses_redis
