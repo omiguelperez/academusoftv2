@@ -24,8 +24,8 @@ if __name__ == "__main__":
         raise
 
     # This allows easy placement of apps within the interior
-    # courses_ms directory.
+    # courses directory.
     current_path = Path(__file__).parent.resolve()
-    sys.path.append(str(current_path / "courses_ms"))
+    sys.path.append(str(current_path / "courses"))
 
     execute_from_command_line(sys.argv)

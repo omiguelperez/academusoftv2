@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('teacher', models.UUIDField(default=uuid.uuid4)),
                 ('year', models.PositiveSmallIntegerField()),
                 ('semester', models.PositiveSmallIntegerField()),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='course_groups', to='courses_ms.course')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='course_groups', to='courses.course')),
             ],
             options={
                 'abstract': False,
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('student', models.UUIDField(default=uuid.uuid4)),
-                ('course_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='students', to='courses_ms.coursegroup')),
+                ('course_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='students', to='courses.coursegroup')),
             ],
             options={
                 'abstract': False,
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
                 ('week_day', models.CharField(choices=[('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')], max_length=20)),
                 ('start_time', models.PositiveSmallIntegerField()),
                 ('end_time', models.PositiveSmallIntegerField()),
-                ('course_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='schedules', to='courses_ms.coursegroup')),
+                ('course_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='schedules', to='courses.coursegroup')),
             ],
             options={
                 'abstract': False,

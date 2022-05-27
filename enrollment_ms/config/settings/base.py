@@ -6,8 +6,8 @@ from pathlib import Path
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# enrollment_ms/
-APPS_DIR = ROOT_DIR / "enrollment_ms"
+# enrollment/
+APPS_DIR = ROOT_DIR / "enrollment"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -69,7 +69,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "enrollment_ms.enrollment_ms.apps.EnrollmentConfig"
+    "enrollment.enrollment.apps.EnrollmentConfig"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

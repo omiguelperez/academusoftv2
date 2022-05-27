@@ -14,7 +14,7 @@ urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("auth_ms.users.urls", namespace="users")),
+    path("users/", include("auth.users.urls", namespace="users")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
@@ -24,8 +24,8 @@ if settings.DEBUG:
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
-    # DRF auth_ms token
-    path("auth_ms-token/", obtain_auth_token),
+    # DRF auth token
+    path("auth-token/", obtain_auth_token),
 ]
 
 if settings.DEBUG:

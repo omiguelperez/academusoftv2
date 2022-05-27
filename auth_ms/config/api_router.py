@@ -17,5 +17,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path("all-users/", SuperUserListView.as_view(), name='superuserlist'),
-    path("obtain-auth_ms-token/", ObtainAuthToken.as_view(), name='obtain-auth_ms-token'),
+    path("obtain-auth-token/", ObtainAuthToken.as_view(), name='obtain-auth-token'),
 ]

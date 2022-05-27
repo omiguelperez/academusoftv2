@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [("auth_ms", "0008_alter_user_username_max_length")]
+    dependencies = [("auth", "0008_alter_user_username_max_length")]
 
     operations = [
         migrations.CreateModel(
@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
                         help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
                         related_name="user_set",
                         related_query_name="user",
-                        to="auth_ms.Group",
+                        to="auth.Group",
                         verbose_name="groups",
                     ),
                 ),
@@ -105,7 +105,7 @@ class Migration(migrations.Migration):
                         help_text="Specific permissions for this user.",
                         related_name="user_set",
                         related_query_name="user",
-                        to="auth_ms.Permission",
+                        to="auth.Permission",
                         verbose_name="user permissions",
                     ),
                 ),

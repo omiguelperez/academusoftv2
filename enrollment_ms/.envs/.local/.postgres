@@ -1,6 +1,6 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
-POSTGRES_HOST=postgres
+POSTGRES_HOST=enrollment_db
 POSTGRES_PORT=5432
 POSTGRES_DB=enrollment_db
 POSTGRES_USER=MWiLKMfTThABnPVDFytOXVfIyOnCMfMd

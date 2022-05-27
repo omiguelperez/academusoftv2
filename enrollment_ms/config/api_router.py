@@ -10,7 +10,7 @@ if settings.DEBUG:
 else:
     router = SimpleRouter()
 
-router.register("enrollment_ms", EnrollmentViewSet, basename="enrollment_ms")
+router.register("enrollment", EnrollmentViewSet, basename="enrollment")
 
 app_name = "api"
 urlpatterns = router.urls

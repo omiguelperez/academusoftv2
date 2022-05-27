@@ -13,7 +13,7 @@ from ..models import Schedule, StudentEnrollment
 from ..queries import list_courses_for_enrolling
 
 
-# /api/enrollment_ms/
+# /api/enrollment/
 class EnrollmentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
