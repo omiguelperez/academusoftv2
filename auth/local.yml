@@ -1,8 +1,8 @@
 version: '3'
 
 volumes:
-  local_postgres_data: {}
-  local_postgres_data_backups: {}
+  auth_local_postgres_data: {}
+  auth_local_postgres_data_backups: {}
 
 services:
   django:
@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: compose/local/django/Dockerfile
     image: auth_local_django
-    container_name: django
+    container_name: auth_django
     depends_on:
       - postgres
     volumes:
@@ -27,13 +27,13 @@ services:
       context: .
       dockerfile: compose/production/postgres/Dockerfile
     image: auth_local_postgres
-    container_name: postgres
+    container_name: auth_postgres
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data:Z
-      - local_postgres_data_backups:/backups:z
+      - auth_local_postgres_data:/var/lib/postgresql/data:Z
+      - auth_local_postgres_data_backups:/backups:z
     env_file:
       - .envs/.local/.postgres
 
   redis:
     image: redis:6
-    container_name: redis
+    container_name: auth_redis

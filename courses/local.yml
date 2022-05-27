@@ -1,8 +1,8 @@
 version: '3'
 
 volumes:
-  local_postgres_data: {}
-  local_postgres_data_backups: {}
+  courses_local_postgres_data: {}
+  courses_local_postgres_data_backups: {}
 
 services:
   django:
@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: compose/local/django/Dockerfile
     image: courses_local_django
-    container_name: django
+    container_name: courses_django
     depends_on:
       - postgres
     volumes:
@@ -19,7 +19,7 @@ services:
       - .envs/.local/.django
       - .envs/.local/.postgres
     ports:
-      - "8000:8000"
+      - "8001:8000"
     command: /start
 
   postgres:
@@ -27,13 +27,13 @@ services:
       context: .
       dockerfile: compose/production/postgres/Dockerfile
     image: courses_local_postgres
-    container_name: postgres
+    container_name: courses_postgres
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data:Z
-      - local_postgres_data_backups:/backups:z
+      - courses_local_postgres_data:/var/lib/postgresql/data:Z
+      - courses_local_postgres_data_backups:/backups:z
     env_file:
       - .envs/.local/.postgres
 
   redis:
     image: redis:6
-    container_name: redis
+    container_name: courses_redis
