@@ -33,6 +33,8 @@ services:
       - enrollment_local_postgres_data_backups:/backups:z
     env_file:
       - .envs/.local/.postgres
+    ports:
+      - "5432:5432"
 
   enrollment_redis:
     image: redis:6

@@ -33,6 +33,8 @@ services:
       - courses_local_postgres_data_backups:/backups:z
     env_file:
       - .envs/.local/.postgres
+    ports:
+      - "5431:5432"
 
   courses_redis:
     image: redis:6
