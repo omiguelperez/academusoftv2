@@ -33,6 +33,8 @@ services:
       - auth_local_postgres_data_backups:/backups:z
     env_file:
       - .envs/.local/.postgres
+    ports:
+      - "5430:5432"
 
   auth_redis:
     image: redis:6
