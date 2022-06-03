@@ -1,22 +1,20 @@
-import { generalRequest, getRequest } from '../../utilities';
-import { url, port, entryPoint } from './server';
+import ServiceIntegrador from './Integrador';
 
-const URL = `${url}${entryPoint}`;
-
+const SI=new ServiceIntegrador();
 const resolvers = {
 	Query: {
 		allCourse: (_) =>
-			getRequest(URL, ''),
+			SI.allCourse(),
 		courseById: (_, { id }) =>
-			generalRequest(`${URL}/${id}`, 'GET'),
+		    SI.courseById(id),
 	},
 	Mutation: {
 		createCourse: (_, { Course }) =>
-			generalRequest(`${URL}/`, 'POST', Course),
+		    SI.createCourse(Course),
 		updateCourse: (_, { id, Course }) =>
-			generalRequest(`${URL}/${id}/`, 'PATCH', Course),
+			SI.updateCourse(id, Course),
 		deleteCourse: (_, { id }) =>
-			generalRequest(`${URL}/${id}/`, 'DELETE')
+			SI.deleteCourse(id)
 	}
 };
 

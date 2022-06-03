@@ -1,7 +1,6 @@
 import merge from 'lodash.merge';
 import GraphQLJSON from 'graphql-type-json';
 import { makeExecutableSchema } from 'graphql-tools';
-
 import { mergeSchemas } from './utilities';
 
 
@@ -15,18 +14,26 @@ import {
 	studentQueries,
 	studentTypeDef
 } from './MS/student/typeDefs';
+import {
+	ValidadorQueries,
+	ValidadorTypeDef
+} from './MS/ag/typeDefs';
 import courseResolvers from './MS/course/resolvers';
 import studentResolvers from './MS/student/resolvers';
+import ValidadorResolvers from './MS/ag/resolvers';
 // merge the typeDefs
 const mergedTypeDefs = mergeSchemas(
 	[
 		'scalar JSON',
 		courseTypeDef,
-		studentTypeDef
+		studentTypeDef,
+		ValidadorTypeDef
+		
 	],
 	[
 		courseQueries,
-		studentQueries
+		studentQueries,
+		ValidadorQueries
 	],
 	[
 		courseMutations,
@@ -40,7 +47,8 @@ export default makeExecutableSchema({
 	resolvers: merge(
 		{ JSON: GraphQLJSON }, // allows scalar JSON
 		courseResolvers,
-		studentResolvers
+		studentResolvers,
+		ValidadorResolvers
 	)
 });
 
