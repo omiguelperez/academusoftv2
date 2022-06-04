@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  django:
-    image: "${DOCKER_REGISTRY}/agile_academusoft_v2_backend_${ECR_ENVIRONMENT}_django:${TAGVERSION}"
-
-  postgres:
-    image: "${DOCKER_REGISTRY}/agile_academusoft_v2_backend_${ECR_ENVIRONMENT}_postgres:${TAGVERSION}"

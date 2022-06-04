@@ -1,0 +1,41 @@
+version: '3'
+
+volumes:
+  courses_local_postgres_data: {}
+  courses_local_postgres_data_backups: {}
+
+services:
+  courses_ms:
+    build:
+      context: .
+      dockerfile: compose/local/django/Dockerfile
+    image: courses_local_django
+    container_name: courses_ms
+    depends_on:
+      - courses_db
+    volumes:
+      - .:/app:z
+    env_file:
+      - .envs/.local/.django
+      - .envs/.local/.postgres
+    ports:
+      - "8001:8000"
+    command: /start
+
+  courses_db:
+    build:
+      context: .
+      dockerfile: compose/production/postgres/Dockerfile
+    image: courses_local_postgres
+    container_name: courses_db
+    volumes:
+      - courses_local_postgres_data:/var/lib/postgresql/data:Z
+      - courses_local_postgres_data_backups:/backups:z
+    env_file:
+      - .envs/.local/.postgres
+    ports:
+      - "5431:5432"
+
+  courses_redis:
+    image: redis:6
+    container_name: courses_redis
