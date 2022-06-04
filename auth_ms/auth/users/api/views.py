@@ -72,4 +72,4 @@ class ObtainAuthToken(RestFrameworkObtainAuthToken):
     serializer_class = AuthTokenSerializer
 
 
-obtain_auth_token = ObtainAuthToken
+obtain_auth_token = ObtainAuthToken.as_view()
