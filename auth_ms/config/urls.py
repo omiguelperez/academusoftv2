@@ -4,8 +4,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
-from rest_framework.authtoken.views import obtain_auth_token
+from auth.users.api.views import obtain_auth_token
 
 admin.site.site_header = "Authentication"
 admin.site.site_title = "Authentication"

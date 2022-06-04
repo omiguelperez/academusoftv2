@@ -10,6 +10,8 @@ ARG BUILD_ENVIRONMENT=local
 
 # Install apt packages
 RUN apt-get update && apt-get install -y \
+  # LDAP
+  libsasl2-dev libldap2-dev \
   # dependencies for building Python packages
   build-essential \
   # psycopg2 dependencies

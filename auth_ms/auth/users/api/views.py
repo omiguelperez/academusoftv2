@@ -9,7 +9,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from auth.users.api.permissions import IsSuperUser
 from auth.users.models import Student, Teacher
-from auth.users.api.serializers import StudentSerializer, TeacherSerializer
+from auth.users.api.serializers import StudentSerializer, TeacherSerializer, AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken as RestFrameworkObtainAuthToken
 
 from .serializers import UserSerializer
 
@@ -40,8 +41,6 @@ class TeacherViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, Creat
     queryset = Teacher.objects.all()
 
 
-
-
 class SuperUserListView(APIView):
     permission_classes = (IsAuthenticated, IsSuperUser,)
 
@@ -67,3 +66,10 @@ class SuperUserListView(APIView):
             } for user in users
         ]
         return Response(user_list)
+
+
+class ObtainAuthToken(RestFrameworkObtainAuthToken):
+    serializer_class = AuthTokenSerializer
+
+
+obtain_auth_token = ObtainAuthToken
