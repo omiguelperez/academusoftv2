@@ -1,0 +1,22 @@
+{
+  "name": "agile-academusoft-v2-web",
+  "version": "1.0.0",
+  "description": "Frontend project",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omiguelperez/agile-academusoft-v2-web.git"
+  },
+  "author": "Frontend Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omiguelperez/agile-academusoft-v2-web/issues"
+  },
+  "homepage": "https://github.com/omiguelperez/agile-academusoft-v2-web#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
