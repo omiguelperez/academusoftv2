@@ -40,7 +40,6 @@ const MaterialComponents = [
   MatButtonToggleModule,
   MatMenuModule,
   MatCheckboxModule
-  
 ]
 
 @NgModule({
