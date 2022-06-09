@@ -18,26 +18,35 @@ import {
 	ValidadorQueries,
 	ValidadorTypeDef
 } from './MS/ag/typeDefs';
+import {
+	authMutations,
+	AuthQueries,
+	AuthTypeDef
+} from './MS/Auth/typeDefs';
 import courseResolvers from './MS/course/resolvers';
 import studentResolvers from './MS/student/resolvers';
 import ValidadorResolvers from './MS/ag/resolvers';
+import AuthResolvers from './MS/Auth/resolvers';
 // merge the typeDefs
 const mergedTypeDefs = mergeSchemas(
 	[
 		'scalar JSON',
 		courseTypeDef,
 		studentTypeDef,
-		ValidadorTypeDef
+		ValidadorTypeDef,
+		AuthTypeDef
 		
 	],
 	[
 		courseQueries,
 		studentQueries,
-		ValidadorQueries
+		ValidadorQueries,
+		AuthQueries
 	],
 	[
 		courseMutations,
-		studentMutations
+		studentMutations,
+		authMutations
 	]
 );
 
@@ -48,7 +57,8 @@ export default makeExecutableSchema({
 		{ JSON: GraphQLJSON }, // allows scalar JSON
 		courseResolvers,
 		studentResolvers,
-		ValidadorResolvers
+		ValidadorResolvers,
+		AuthResolvers
 	)
 });
 
