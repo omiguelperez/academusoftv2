@@ -1,17 +1,24 @@
+<div class="toolbar" role="banner">
+  <img width="100" alt="UPC Logo" src="../../../assets/images/logo.png"/>
+  <button mat-button (click)="course()">Asignaturas</button>
+  <button mat-button (click)="student()">Estudiantes</button>
+  <div class="spacer"></div>
+  <button mat-button color="warn" (click)="cerrarSesion()">Cerrar sesión</button>
+</div>
 
-<div class="row margin-0 center-xs padding-16">
-    <mat-card-title>Asignaturas</mat-card-title>
-  </div>
+<div class="row margin-0 center-xs padding-16 margin-top-80">
+  <mat-card-title>Asignaturas</mat-card-title>
+</div>
 
-  <div class="row margin-0 start-xs padding-16">
-    <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 padding-10" *ngFor="let item of courses" >
-      <mat-card  class="shadow1 borde-radio-10 cursor-pointer">
-        <mat-card-header >
-          <div mat-card-avatar class="image"></div>
-          <mat-card-title class="trunc-1">{{item?.name}}</mat-card-title>
-          <mat-card-subtitle class="margin-bottom-4">Código: {{item?.code}}</mat-card-subtitle>
-          <mat-card-subtitle class="margin-bottom-4">Créditos: {{item?.credits}}</mat-card-subtitle>
-        </mat-card-header>
-      </mat-card>
-    </div>
+<div class="row margin-0 start-xs padding-16">
+  <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 padding-10" *ngFor="let item of courses" >
+    <mat-card  class="shadow1 borde-radio-10 cursor-pointer">
+      <mat-card-header >
+        <div mat-card-avatar class="image"></div>
+        <mat-card-title class="trunc-1">{{item?.name}}</mat-card-title>
+        <mat-card-subtitle class="margin-bottom-4">Código: {{item?.code}}</mat-card-subtitle>
+        <mat-card-subtitle class="margin-bottom-4">Créditos: {{item?.credits}}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
   </div>
+</div>

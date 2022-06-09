@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
   data = `{
     "data": {
         "allStudent": [
@@ -59,5 +62,16 @@ export class StudentComponent implements OnInit {
     this.student = listStudent.data?.allStudent;
   }
 
+  course(){
+    this.router.navigate(['/course']);
+  }
+
+  studentr(){
+    this.router.navigate(['/student']);
+  }
+
+  cerrarSesion(){
+    this.router.navigate(['/login']);
+  }
 
 }
