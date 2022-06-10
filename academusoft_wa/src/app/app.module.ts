@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/modules/material.module';
+import { Apollo } from 'apollo-angular';
+import { GraphQLModule } from './graphql.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -15,7 +17,8 @@ import { MaterialModule } from './shared/modules/material.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    GraphQLModule
   ],
   providers: [
     HttpClient

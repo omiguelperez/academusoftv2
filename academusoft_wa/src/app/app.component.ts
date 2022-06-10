@@ -25,6 +25,5 @@ export class AppComponent implements OnInit {
   }
 
   public allStudent(){
-    this.AcademusoftService.login();
   }
 }
