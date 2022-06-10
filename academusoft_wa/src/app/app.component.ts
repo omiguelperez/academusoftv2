@@ -11,19 +11,13 @@ export class AppComponent implements OnInit {
   title = 'Academusoft_wa';
 
   constructor(
-    private router: Router,
-    private AcademusoftService: AcademusoftService,
+    private router: Router
   ) {
 
 
   }
 
   ngOnInit() {
-    //debugger;
-    //this.allStudent();
     //this.router.navigate(['/login'])
-  }
-
-  public allStudent(){
   }
 }

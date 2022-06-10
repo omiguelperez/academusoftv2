@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Apollo, gql } from 'apollo-angular';
 
 @Component({
   selector: 'app-student',
@@ -7,9 +8,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./student.component.scss']
 })
 export class StudentComponent implements OnInit {
-
+  loading: boolean = false;
   constructor(
-    private router: Router
+    private router: Router,
+    private apollo: Apollo
   ) { }
   data = `{
     "data": {
@@ -54,12 +56,28 @@ export class StudentComponent implements OnInit {
     }
 }`;
   
-  
+private querySubscription: any;
   student:any;
   ngOnInit(): void {
+    const GET_POSTS = gql`
+    query {
+      allStudent {
+        id,
+        name,
+        username,
+        nuip
+      }
+    }`;
+    this.querySubscription = this.apollo.watchQuery<any>({
+      query: GET_POSTS
+    }).valueChanges.subscribe(({ data, loading }) => {
+        this.loading = loading;
+        this.student = data.allStudent;
+      });
+  }
 
-    let listStudent = JSON.parse(this.data)
-    this.student = listStudent.data?.allStudent;
+  ngOnDestroy() {
+    this.querySubscription.unsubscribe();
   }
 
   course(){

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { AcademusoftService } from 'src/app/core/services/academusoft.service';
 const GET_POSTS = gql`
 query {
@@ -29,19 +28,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   private querySubscription: any;
 
   ngOnInit(): void {
-    debugger;
-    this.querySubscription = this.apollo.watchQuery<any>({
-      query: GET_POSTS
-    })
-      .valueChanges
-      .subscribe(({ data, loading }) => {
-        this.loading = loading;
-        this.posts = data.posts;
-      });
+    
+    
   }
 
   ngOnDestroy() {
     this.querySubscription.unsubscribe();
+  }
+
+  async func () {
+    let valor = await this.service.allStudent();
+    console.log(valor);
   }
 
   formulario = new FormGroup({
@@ -55,6 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   async guardar(){
+    await this.func();
     if(this.formulario.invalid){
       alert("Invalido");
       return;
