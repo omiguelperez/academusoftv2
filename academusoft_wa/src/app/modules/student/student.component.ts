@@ -89,7 +89,12 @@ private querySubscription: any;
   }
 
   cerrarSesion(){
-    this.router.navigate(['/login']);
+    if(localStorage.getItem("User")){
+      localStorage.removeItem("token")
+      localStorage.removeItem("User")
+      this.router.navigate(['/login'])
+    }
   }
+
 
 }

@@ -18,6 +18,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.router.navigate(['/login'])
+    this.ValidateSession();
+  }
+
+  ValidateSession(){
+      if(!localStorage.getItem("token")){
+        this.router.navigate(['/login']);
+      }else{
+        this.router.navigate(['/course']);
+      }
   }
 }

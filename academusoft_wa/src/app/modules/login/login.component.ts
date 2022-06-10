@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { AcademusoftService } from 'src/app/core/services/academusoft.service';
 @Component({
@@ -7,20 +8,16 @@ import { AcademusoftService } from 'src/app/core/services/academusoft.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   hide = true;
   loading: boolean = false;
   posts: any;
 
-  constructor(private service : AcademusoftService,private apollo: Apollo) { }
+  constructor(private service : AcademusoftService,private apollo: Apollo, private router: Router) { }
 
   private querySubscription: any;
 
   ngOnInit(): void {}
-
-  ngOnDestroy() {
-    this.querySubscription.unsubscribe();
-  }
 
   formulario = new FormGroup({
     Identificacion: new FormControl(null,Validators.required),
@@ -45,10 +42,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     }).subscribe(({ data } : any) => {
       this.token = data?.login.token
-      console.log(this.token);
+      localStorage.setItem("token", this.token)
+      localStorage.setItem("User", this.formulario.value.Identificacion)
+      this.router.navigate(['/course']);
     },(error) => {
       alert("Invalido");
       console.log('there was an error sending the query', error);
     });
   }
+
+  
 }
