@@ -2,11 +2,11 @@
 <form [formGroup]="formulario" (ngSubmit)="guardar()" (keyup.enter)="guardar()" class="h-p-100 row middle-xs margin-0">
     <div class="col-xs-12 center-xs">
       <img src="../../../assets/images/logo_upc.png" alt="logo" class="avatar-150">
-      <h1 class="margin-top-0"><b>Inicio de sesion</b></h1>
+      <h1 class="margin-top-0"><b>Iniciar sesión</b></h1>
       <div class="row center-xs">
         <mat-form-field appearance="outline"  class="col-xs-12 col-sm-6 col-md-5 col-lg-3 padding-0">
-          <mat-label>identificacion</mat-label>
-          <input matInput id="Identificacion" formControlName="Identificacion" type="number">
+          <mat-label>Usuario</mat-label>
+          <input matInput id="Identificacion" formControlName="Identificacion">
         </mat-form-field>
       </div>
       <div class="row center-xs">
