@@ -22,6 +22,23 @@ services:
       - "8000:8000"
     command: /start
 
+  auth2_ms:
+    build:
+      context: .
+      dockerfile: compose/local/django/Dockerfile
+    image: auth_local_django
+    container_name: auth2_ms
+    depends_on:
+      - auth_db
+    volumes:
+      - .:/app:z
+    env_file:
+      - .envs/.local/.django
+      - .envs/.local/.postgres
+    ports:
+      - "8005:8000"
+    command: /start
+
   auth_db:
     build:
       context: .
