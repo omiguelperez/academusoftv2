@@ -205,7 +205,7 @@ back-color{
   //tiempo de espera para animacion
 
   .custom-delay-#{$i}{
-    animation-delay: #{$i/10}s !important; 
+    animation-delay: #{calc($i / 10)}s !important; 
   }
   //borde radio porcentaje
   .borde-radio-#{$i}p {
